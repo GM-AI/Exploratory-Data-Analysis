@@ -10,17 +10,14 @@ SCC <- readRDS("Source_Classification_Code.rds")
 balt <- subset(NEI, NEI$fips == "24510")
 
 #Aggregate
-balt_type_year<-aggregate(balt$Emissions,
-                          by=list(balt$type,balt$year),
-                          sum)
-colnames(balt_type_year) <- c("Type", "Year", "Emissions")
+balt_type_year<-aggregate(Emissions ~ type +year,balt,sum)
 
 #plot
 library(ggplot2)
 png(filename = "plot3.png",width=1920, height=1280, res=300)
-qplot(Year, Emissions/1000, data = balt_type_year, color = Type) +
+qplot(year, Emissions/1000, data = balt_type_year, color = type) +
   geom_line()+
-  facet_grid(.~Type)+
+  facet_grid(.~type)+
   ggtitle("Total Emissions of PM2.5 in Baltimore City By pollutant type") + 
   ylab("Total Emissions kilotons") + 
   xlab("Year")+
